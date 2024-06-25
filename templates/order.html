@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Form</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-image: url("/static/bg_h2.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .order-form {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .form-group label {
+        font-weight: bold;
+      }
+      .orderform {
+        text-align: center;
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.5rem;
+        color: #ffffff;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2 class="my-4 orderform">Order Form</h2>
+
+      <div class="order-form">
+        <form action="/place_order" method="POST">
+          <div class="form-group">
+            <label for="name">Name :</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              name="name"
+              value="{{ username }}"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label for="address">Address :</label>
+            <textarea
+              class="form-control"
+              id="address"
+              name="address"
+              rows="3"
+              required
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label for="items">Items Ordered :</label>
+            <ul id="items" class="list-unstyled">
+              {% for item_id, item in cart.items() %}
+              <li>
+                {{ item['product']['name'] }} - Quantity: {{ item['quantity'] }}
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+          <div class="form-group">
+            <label for="totalItems">Total Items:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="totalItems"
+              name="totalItems"
+              value="{{ total_items }}"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label for="totalPrice">Total Price:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="totalPrice"
+              name="totalPrice"
+              value="{{ total_price }}"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label for="paymentMethod">Payment Method:</label>
+            <select
+              class="form-control"
+              id="paymentMethod"
+              name="paymentMethod"
+              required
+            >
+              <option value="">Select Payment Method</option>
+              <option value="cash">Cash</option>
+              <option value="ewallet">E-Wallet</option>
+              <option value="bank">Bank Transfer</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="col">
+              <button type="button" class="btn btn-outline-danger btn-block">
+                Cancel
+              </button>
+            </div>
+            <div class="col">
+              <button type="submit" class="btn btn-outline-primary btn-block">
+                Place Order
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {});
+    </script>
+  </body>
+</html>

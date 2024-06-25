@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <style>
+    /* Style for the cart items */
+    .cart-items {
+      padding: 20px;
+      /* Padding for the entire cart */
+    }
+
+    .cart-list {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .cart-item {
+      border-bottom: 1px solid #ccc;
+      padding: 10px 0;
+    }
+
+    .card {
+      background-color: #fff;
+      border: none;
+      /* Remove border */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      /* Add shadow for depth */
+      padding: 10px;
+    }
+
+    .cart-item img {
+      max-width: 50px;
+      max-height: 50px;
+      margin-right: 10px;
+    }
+
+    .item-info {
+      display: flex;
+      align-items: center;
+    }
+
+    .item-info .item-name {
+      flex: 1;
+      color: #333543;
+      font-weight: bold;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .item-info .item-price {
+      flex: 0 0 80px;
+      text-align: right;
+      color: #333543;
+      font-weight: bold;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .item-quantity {
+      display: flex;
+      align-items: center;
+    }
+
+    .quantity-input {
+      width: 50px;
+      text-align: center;
+      margin: 0 10px;
+    }
+
+    .total-section {
+      margin-top: 20px;
+    }
+
+    .total-section .total-label {
+      font-weight: bold;
+    }
+
+    .bg-image {
+      background-image: url('/static/bg_h2.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 100vh;
+      padding: 40px 0;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+    <a class="navbar-brand" href="/home">
+      <img src="/static/logo3.png" alt="Bootstrap" width="180" height="50">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </nav>
+  <div class="bg-image">
+    <div class="container">
+      <h2 class="my-4 text-center text-white">My Cart</h2>
+      <div class="card cart-items">
+        <ul class="cart-list">
+          {% for item_id, item in cart.items() %}
+          <li class="cart-item" id="item-{{ item_id }}">
+            <div class="row">
+              <div class="col-md-2 item-info">
+                <img src="{{ url_for('static', filename='uploads/' + item['product']['image']) }}"
+                  alt="{{ item['product']['name'] }}" class="img-fluid">
+                <span class="item-name">{{ item['product']['name'] }}</span>
+              </div>
+              <div class="col-md-2 item-price">Rp. {{ item['product']['price'] }}</div>
+              <div class="col-md-4 item-quantity">
+                <button onclick="decrement()"> - </button>
+                <span id="counter" class="m-2">1</span>
+                <button onclick="increment()"> + </button>
+
+                <!-- <button class="btn btn-sm btn-secondary decrease-btn" onclick="decrement()">-</button>
+                <span id="counter"><input type="text"></span> -->
+
+                <!-- <button class="btn btn-sm btn-secondary increase-btn" onclick="increment()">+</button> -->
+              </div>
+              <div class="col-md-2">
+                <button class="btn btn-sm btn-danger remove-btn" data-item-id="{{ item_id }}">Remove</button>
+              </div>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="total-section">
+        <div class="row">
+          <div class="col-md-8"></div>
+          <div class="col-md-4">
+            <div class="total-label text-white">Total Items: {{ total_items }}</div>
+            <div class="total-label text-white">Total Price: Rp. {{ total_price }}</div>
+            <hr class="bg-light">
+            <a href="/order" class="btn btn-outline-secondary btn-block mt-3">Checkout</a>
+            <a href="/home" class="btn btn-primary btn-block mb-3 mt-3">Back to Home</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <script>
+
+    let counter = 1;
+
+    function increment() {
+      counter++;
+      document.getElementById("counter").innerHTML = counter;
+    }
+
+    function decrement() {
+      if (counter > 0) {
+        counter--;
+        document.getElementById("counter").innerHTML = counter;
+      }
+    }
+
+    function updateCartTotal() {
+      var totalItems = 0;
+      var totalPrice = 0;
+
+      $('.cart-item').each(function () {
+        var itemId = $(this).attr('id').replace('item-', '');
+        var quantity = parseInt($('#quantity-' + itemId).val());
+        var price = parseFloat($('#price-' + itemId).data('price'));
+
+        totalItems += quantity;
+        totalPrice += quantity * price;
+      });
+
+      $('#total-items').text(totalItems);
+      $('#total-price').text(totalPrice.toFixed(2));
+    }
+
+    $('.remove-btn').click(function () {
+      var itemId = $(this).data('item-id');
+      if (confirm('Are you sure you want to remove this item from cart?')) {
+        $.ajax({
+          url: '/remove_from_cart/' + itemId,
+          method: 'DELETE',
+          success: function (response) {
+            $('#item-' + itemId).remove();
+            updateCartTotal();
+            alert('Item removed from cart.');
+          },
+          error: function () {
+            alert('Failed to remove item from cart.');
+          }
+        });
+      }
+    });
+    $(document).ready(function () {
+      updateCartTotal();
+    });
+  </script>
+</body>
+
+</html>

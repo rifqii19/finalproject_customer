@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order List</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <style>
+    body {
+      background-image: url("/static/bg_h2.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Montserrat", sans-serif;
+    }
+
+    .order-container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+
+    .order-card {
+      margin-bottom: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-item {
+      border-bottom: 1px solid #ccc;
+      padding: 10px 0;
+    }
+
+    .order-item:last-child {
+      border-bottom: none;
+    }
+
+    .order-item .order-details {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .order-item .order-details .order-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .order-item .order-actions button {
+      margin-left: 10px;
+    }
+
+    .myorder {
+      text-align: center;
+      font-family: "Montserrat", sans-serif;
+      font-size: 2rem;
+      color: #ffffff;
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+    <a class="navbar-brand" href="/home">
+      <img src="/static/logo3.png" alt="Bootstrap" width="180" height="50">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </nav>
+  <div class="container order-container">
+    <h2 class="mb-4 myorder">My Order</h2>
+
+
+
+    {% if orders %}
+    {% for order in orders %}
+    <div class="card order-card">
+      <div class="card-body">
+        <div class="order-item">
+          <div class="order-details">
+            <div>
+              <p><strong>Name :</strong> {{ order.customer_name }}</p>
+              <p><strong>Product Names :</strong>
+              <ul>
+                {% for product_name in order.product_names %}
+                <li>{{ product_name }}</li>
+                {% endfor %}
+              </ul>
+              </p>
+              <p><strong>Order Summary :</strong> {{ order.order_summary }}</p>
+              <p><strong>Order Status :</strong> {{ order.order_status }}</p>
+            </div>
+            <div class="order-actions">
+              {% if order.order_status == "Waiting Confirmation" %}
+              <form action="/accept_order/{{ order._id }}" method="post">
+                <button type="submit" class="btn btn-success">Accept Order</button>
+              </form>
+              {% elif order.order_status == "Accepted" %}
+              <p class="text-success">Order Accepted</p>
+              {% endif %}
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% endfor %}
+    {% else %}
+    <p>No orders found.</p>
+    {% endif %}
+    <a href="/home" class="btn btn-primary mb-3">Back to Home</a>
+  </div>
+
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Product</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <style>
+        body {
+            background-color: #222;
+            color: #fff;
+            font-family: sans-serif;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .product {
+            background-color: #333543;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            text-align: left;
+            display: flex;
+        }
+
+        .product-image {
+            width: 50%;
+            padding-right: 20px;
+        }
+
+        .product-image img {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        .product-details {
+            width: 50%;
+        }
+
+        .product-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            color: #FFFFFF;
+            font-weight: 300;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .product-price {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            color: #FFFFFF;
+            font-weight: 100;
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .product-description {
+            font-size: 16px;
+            color: #FFFFFF;
+            font-family: 'Montserrat', sans-serif;
+            margin-bottom: 20px;
+        }
+
+        .product-quantity {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .product-quantity button {
+            background-color: #444;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .product-quantity input {
+            width: 50px;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            margin: 0 5px;
+            background-color: #333;
+            color: #fff;
+        }
+
+        .product-actions {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .product-actions button {
+            background-color: #ffc107;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            color: #fff;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .product-actions button:hover {
+            background-color: #ffdd44;
+        }
+
+        .product-back {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .product-back a {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .product-back a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+        <a class="navbar-brand" href="/home">
+            <img src="/static/logo3.png" alt="Bootstrap" width="180" height="50">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
+    <div class="container">
+        <div class="product">
+            <div class="product-image">
+                <img src="{{ url_for('static', filename='uploads/' + product.image) }}" alt="{{ product.name }}">
+            </div>
+            <div class="product-details">
+                <div class="product-title">
+                    {{ product.name }}
+                </div>
+                <div class="product-price">
+                    Rp. {{ "{:,}".format(product.price) }}
+                </div>
+                <div class="product-description">
+                    {{ product.description }}
+                </div>
+                <div class="product-actions">
+                    <form action="/add_to_cart" method="POST">
+                        <input type="hidden" name="_id" value="{{ product._id }}">
+                        <input type="hidden" name="name" value="{{ product.name }}">
+                        <input type="hidden" name="price" value="{{ product.price }}">
+                        <input type="hidden" name="image" value="{{ product.image }}">
+                        <div class="product-quantity">
+                            <button type="button" class="btn btn-sm btn-secondary"
+                                onclick="decreaseQuantity(this)">-</button>
+                            <input type="text" name="quantity" class="form-control quantity-input" value="1">
+                            <button type="button" class="btn btn-sm btn-secondary m-2"
+                                onclick="increaseQuantity(this)">+</button>
+                        </div>
+                        <button type="submit">Add to Cart</button>
+
+                    </form>
+
+                </div>
+                <a href="/product" class="btn btn-primary mb-3 mt-3">Back to Products</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function increaseQuantity() {
+            var quantityInput = document.querySelector('.quantity-input');
+            var quantity = parseInt(quantityInput.value);
+            quantityInput.value = quantity + 1;
+        }
+
+        function decreaseQuantity() {
+            var quantityInput = document.querySelector('.quantity-input');
+            var quantity = parseInt(quantityInput.value);
+            if (quantity > 1) {
+                quantityInput.value = quantity - 1;
+            }
+        }
+    </script>
+</body>
+
+</html>

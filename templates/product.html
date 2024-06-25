@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Arrivals</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+</head>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    background-image: url('/static/bg_h2.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 20px;
+  }
+
+  .h2-text2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2rem;
+    color: #fff;
+  }
+
+  .square-image {
+    border-radius: 5px;
+    width: 100%;
+    height: auto;
+  }
+
+  .product-item {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    height: 100%;
+  }
+
+  .product-name {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: 10px;
+    font-family: 'Montserrat', sans-serif;
+    color: #333;
+    text-align: left;
+    font-weight: 300;
+  }
+
+  .product-description {
+    font-size: 1rem;
+    color: #666;
+    font-family: 'Montserrat', sans-serif;
+    text-align: left;
+    font-weight: 100;
+  }
+
+  .product-rating {
+    margin-top: 10px;
+    text-align: right;
+  }
+
+  .rating-stars {
+    font-size: 1.2rem;
+    color: #f39c12;
+  }
+
+  .back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+  }
+</style>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+    <a class="navbar-brand" href="/home">
+      <img src="/static/logo3.png" alt="Bootstrap" width="180" height="50">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </nav>
+  <div class="container">
+    <h2 class="h2-text2" data-aos="fade-up" data-aos-duration="800">OUR PRODUCT</h2>
+
+    <div class="row text-center">
+      {% for product in products %}
+      <div class="col-md-3">
+        <div class="product-item" data-aos="fade-up" data-aos-duration="800">
+          <a href="{{ url_for('detail_product', product_id=product['_id']) }}">
+            <img src="{{ url_for('static', filename='uploads/' + product['image']) }}" alt="{{ product['name'] }}"
+              class="img-fluid square-image">
+            <h2 class="product-name">{{ product['name'] }}</h2>
+            <p class="product-description">Rp. {{ "{:,}".format(product.price) }}
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
+</body>
+
+</html>
